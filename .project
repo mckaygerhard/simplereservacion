@@ -2,6 +2,7 @@
 # Compiled with Gambas 3.4.0
 Title=Simple Reservacion de tickets de cualquier cosa (enfocado a viajes)
 Startup=FMainReservar
+Icon=.icon.png
 Version=0.1.0
 Component=gb.image
 Component=gb.gui

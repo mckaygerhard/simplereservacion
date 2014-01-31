@@ -2,6 +2,7 @@
 
 { Form Form
   MoveScaled(0,0,89,72)
+  Icon = Picture[".icon.png"]
   { PanelLogin Panel
     MoveScaled(2,1,84,9)
     { TextLoginName TextBox
