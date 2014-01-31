@@ -1,0 +1,102 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,89,72)
+  { PanelLogin Panel
+    MoveScaled(2,1,84,9)
+    { TextLoginName TextBox
+      MoveScaled(27,1,16,3)
+      Text = ("TextLoginName")
+    }
+    { TextLabelName TextLabel
+      MoveScaled(8,1,18,3)
+      Text = ("TextLabelName")
+    }
+    { TextLoginPass TextBox
+      MoveScaled(27,5,16,3)
+      Text = ("TextLoginPass")
+    }
+    { TextLabelPass TextLabel
+      MoveScaled(8,5,18,3)
+      Text = ("TextLabelPass")
+    }
+    { ButtonLogin Button
+      MoveScaled(46,1,13,3)
+      Text = ("ButtonLogin")
+    }
+  }
+  { PanelControls Panel
+    MoveScaled(2,11,84,57)
+    { TextLabelCedula TextLabel
+      MoveScaled(2,2,24,3)
+      Text = ("TextLabelCedula")
+    }
+    { TextBoxCedula TextBox
+      MoveScaled(27,2,31,3)
+      Text = ("TextBoxCedula")
+    }
+    { TextLabelNombre TextLabel
+      MoveScaled(2,6,24,3)
+      Text = ("TextLabelNombre")
+    }
+    { TextBoxNombre TextBox
+      MoveScaled(27,6,31,3)
+      Text = ("TextBoxNombre")
+    }
+    { TextLabelApellido TextLabel
+      MoveScaled(2,10,24,3)
+      Text = ("TextLabelApellido")
+    }
+    { TextBoxApellido TextBox
+      MoveScaled(27,10,31,3)
+      Text = ("TextBoxapellido")
+    }
+    { TextLabelLinOrig TextLabel
+      MoveScaled(2,14,24,3)
+      Text = ("TextLabelLinOrig")
+    }
+    { ComboBoxLinOrig ComboBox
+      MoveScaled(27,14,32,3)
+      Text = ("ComboBoxLinOrig")
+    }
+    { TextLabelLinDest TextLabel
+      MoveScaled(2,18,24,3)
+      Text = ("TextLabelLinDest")
+    }
+    { ComboBoxLinDest ComboBox
+      MoveScaled(27,18,32,3)
+      Text = ("ComboBoxLinDest")
+    }
+    { TextLabelLineaTransporte TextLabel
+      MoveScaled(2,22,24,3)
+      Text = ("TextLabelLineaTransporte")
+    }
+    { ComboBoxLineaTransporte ComboBox
+      MoveScaled(27,22,32,3)
+      Text = ("ComboBoxLineaTransporte")
+    }
+    { TextLabelHoraSalida TextLabel
+      MoveScaled(2,26,24,3)
+      Text = ("TextLabelHoraSalida")
+    }
+    { DateChooserFechaSalida DateChooser
+      MoveScaled(27,31,37,20)
+    }
+    { ComboBoxHoraSalida ComboBox
+      MoveScaled(27,26,32,3)
+      Text = ("ComboBoxHoraSalida")
+    }
+    { ButtonReservar Button
+      MoveScaled(3,50,17,3)
+      Text = ("ButtonReservar")
+    }
+    { TextLabelPrecio TextLabel
+      MoveScaled(2,30,22,3)
+      Text = ("TextLabelPrecio")
+    }
+  }
+  { ButtonClose Button
+    MoveScaled(69,2,13,3)
+    Text = ("ButtonClose")
+  }
+}
