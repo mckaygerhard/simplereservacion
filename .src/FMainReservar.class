@@ -1,6 +1,7 @@
 ' Gambas class file
 
 Private operaciones As CTransporteBean
+Private $hReport As Report
 
 Public Sub _new()
     operaciones = New CTransporteBean
@@ -33,13 +34,13 @@ End
 
 Public Sub ButtonLogin_Click()
 
-    If operaciones.VerificarCredenciales(Me.TextLoginName.Text, Me.TextLoginPass.Text) Then
+    'If operaciones.VerificarCredenciales(Me.TextLoginName.Text, Me.TextLoginPass.Text) Then
         habilitarControles
         prepararControles
         rellenarControles
-    Else
-        desabilitarControles
-    Endif
+    'Else
+    '    desabilitarControles
+    'Endif
 
 End
 
@@ -77,12 +78,16 @@ Private Sub prepararControles()
     TextLabelPrecio.Visible = False
 End
 
-Private Sub rellenarControles()
-    Dim objetivoorigen As New String[]
-    Dim objetivodestino As New String[]
-    Dim lineasaescoger As New String[]
-    Dim horasaescoger As New String[]
+Private Sub rellenarControles() ' solo usar p
+    Dim objetivoorigen As New Collection
+    Dim objetivodestino As New Collection
+    Dim lineasaescoger As New Collection
+    Dim horasaescoger As New Collection
     Dim cadalineacombo As String
+    ComboBoxLinOrig.Clear
+    ComboBoxLinDest.Clear
+    ComboBoxLineaTransporte.Clear
+    ComboBoxHoraSalida.Clear
     objetivoorigen = operaciones.OtenerOrigenes()
     For Each cadalineacombo In objetivoorigen
         Me.ComboBoxLinOrig.Add(cadalineacombo)
@@ -91,11 +96,11 @@ Private Sub rellenarControles()
     For Each cadalineacombo In objetivodestino
         Me.ComboBoxLinDest.Add(cadalineacombo)
     Next
-    lineasaescoger = operaciones.ObtenerLineasAescoger(Null, Null)
+    lineasaescoger = operaciones.ObtenerLineasAescoger("*", "*")
     For Each cadalineacombo In lineasaescoger
         Me.ComboBoxLineaTransporte.Add(cadalineacombo)
     Next
-    horasaescoger = operaciones.ObtenerHorasLineasAescoger(Null, Null, Null)
+    horasaescoger = operaciones.ObtenerHorasLineasAescoger("*", "*", "*")
     For Each cadalineacombo In horasaescoger
         Me.ComboBoxHoraSalida.Add(cadalineacombo)
     Next
@@ -131,27 +136,35 @@ Private Sub LimitarFechas()
     
 End
 
-Public Sub ComboBoxLinOrig_Click()
+Public Sub ComboBoxLinOrig_Change()
+    ComboBoxLinOrig_Click()
+End
+
+Public Sub ComboBoxLinOrig_KeyRelease()
+    ComboBoxLinOrig_Click()
+End
+
+
+Public Sub ComboBoxLinOrig_Click() ' ComboBoxLinOrig_Change ComboBoxLinOrig_Click
     ' cambiar este por ComboBoxLinOrig_Click si no te gustase
     Dim seleccionorigen As String
-    Dim objetivodestino As New String[]
-    Dim lineasaescoger As New String[]
-    Dim horasaescoger As New String[]
+    Dim objetivodestino As New Collection
+    Dim lineasaescoger As New Collection
+    Dim horasaescoger As New Collection
     Dim cadalineacombo As String
     ' reinicio de opciones segun lo seleccionado en origen
     seleccionorigen = ComboBoxLinOrig.Index
     ComboBoxLinDest.Clear
     ComboBoxLineaTransporte.Clear
     ComboBoxHoraSalida.Clear
-    ComboBoxLinDest.Text = ""
-    ComboBoxLineaTransporte.Text = ""
-    ComboBoxHoraSalida.Text = ""
-    Wait 1
     ' rellenado respecto la seleccion de origen
     objetivodestino = operaciones.OtenerDestinos(seleccionorigen)
-    For Each cadalineacombo In objetivodestino
-        Me.ComboBoxLinDest.Add(cadalineacombo)
-    Next
+    If objetivodestino.Length > 0 Then
+        For Each cadalineacombo In objetivodestino
+            'Me.ComboBoxLinDest.Add(objetivodestino["destino_descripcion"], objetivodestino["destino_id"])
+            Me.ComboBoxLinDest.Add(cadalineacombo)
+        Next
+    Endif
     ' limitacion de dias a la fecha actual
     LimitarFechas
 End
@@ -161,22 +174,22 @@ Public Sub ComboBoxLinDest_Click()
     ' cambiar este por ComboBoxLinOrig_Click si no te gustase
     Dim seleccionorigen As String
     Dim selecciondestin As String
-    Dim objetivolineas As New String[]
-    Dim horasaescoger As New String[]
+    Dim objetivolineas As New Collection
+    Dim horasaescoger As New Collection
     Dim cadalineacombo As String
     ' reinicio de opciones segun lo seleccionado en origen
     seleccionorigen = ComboBoxLinOrig.Index
     selecciondestin = ComboBoxLinDest.Index
     ComboBoxLineaTransporte.Clear
     ComboBoxHoraSalida.Clear
-    ComboBoxLineaTransporte.Text = ""
-    ComboBoxHoraSalida.Text = ""
-    Wait 1
     ' lineas que van a el destino respecto la seleccion de destino
     objetivolineas = operaciones.ObtenerLineasAescoger(selecciondestin, seleccionorigen)
-    For Each cadalineacombo In objetivolineas
-        Me.ComboBoxLineaTransporte.Add(cadalineacombo)
-    Next
+    If objetivolineas.Length > 0 Then
+        For Each cadalineacombo In objetivolineas
+            'Me.ComboBoxLineaTransporte.Add(objetivolineas["linea_descripcion"], objetivolineas["linea_id"])
+            Me.ComboBoxLineaTransporte.Add(cadalineacombo)
+        Next
+    Endif
     ' limitacion de dias a la fecha actual
     LimitarFechas
 End
@@ -186,21 +199,59 @@ Public Sub ComboBoxLineaTransporte_Click()
     Dim seleccionorigen As String
     Dim selecciondestin As String
     Dim seleccionlinea As String
-    Dim horaobjetivo As New String[]
+    Dim horaobjetivo As New Collection
     Dim cadalineacombo As String
     ' reinicio de opciones segun lo seleccionado en origen
     seleccionorigen = ComboBoxLinOrig.Index
     selecciondestin = ComboBoxLinDest.Index
     seleccionlinea = ComboBoxLineaTransporte.Index
     ComboBoxHoraSalida.Clear
-    ComboBoxHoraSalida.Text = ""
     ' lineas que van a el destino respecto la seleccion de destino
-    Wait 1
     horaobjetivo = operaciones.ObtenerHorasLineasAescoger(selecciondestin, seleccionorigen, seleccionlinea)
-    For Each cadalineacombo In horaobjetivo
-        Me.ComboBoxHoraSalida.Add(cadalineacombo)
-    Next
-    TextLabelPrecio.Text = Me.operaciones.OptenerPrecio(selecciondestin, seleccionorigen, seleccionlinea)
+    If horaobjetivo.Length > 0 Then
+        For Each cadalineacombo In horaobjetivo
+            'Me.ComboBoxHoraSalida.Add(horaobjetivo["hora_descripcion"], horaobjetivo["hora_id"])
+            Me.ComboBoxHoraSalida.Add(cadalineacombo)
+        Next
+    Endif
+    TextLabelPrecio.Text = operaciones.OptenerPrecio(selecciondestin, seleccionorigen, seleccionlinea)
     ' limitacion de dias a la fecha actual
     LimitarFechas
+End
+
+Public Sub ComboBoxHoraSalida_Click()
+    Dim seleccionorigen As String
+    Dim selecciondestin As String
+    Dim seleccionlinea As String
+    Dim seleccionhorasal As String
+    Dim diaobjetivo As Integer
+    ' reinicio de opciones segun lo seleccionado en origen
+    seleccionorigen = ComboBoxLinOrig.Index
+    selecciondestin = ComboBoxLinDest.Index
+    seleccionlinea = ComboBoxLineaTransporte.Index
+    seleccionhorasal = ComboBoxHoraSalida.Index
+    ' lineas que van a el destino respecto la seleccion de destino
+    diaobjetivo = operaciones.ObtenerDiasLineasAescoger(selecciondestin, seleccionorigen, seleccionlinea, seleccionhorasal)
+    'For Each diaobjetivo
+    '    'Me.ComboBoxHoraSalida.Add(diaobjetivo["hora_descripcion"], diaobjetivo["hora_id"])
+    '    Me.ComboBoxHoraSalida.Add(diaobjetivo)
+    'Next
+    ' por ahora esto se limita a saturar l linea siempre qu sea 3 dias adelant
+    'DateChooserFechaSalida = Val(Format$(Now, "dd")) + 3
+End
+
+
+
+Public Sub DateChooserFechaSalida_Change()
+    Dim valido As Integer = 0
+    valido = DateDiff(Date(Now), DateChooserFechaSalida.Value, gb.Day)
+    If valido < 3 Then
+        Message.Error("Selecione un dia mayor, debe reservar en el futuro")
+    Endif
+End
+
+
+Public Sub ButtonReport_Click()
+    $hReport = New RCierrereDiario
+    $hReport.Preview()
 End
