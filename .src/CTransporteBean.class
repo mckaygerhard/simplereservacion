@@ -1,0 +1,146 @@
+' Gambas class file
+
+' 
+' 
+
+Private hconn As New Connection
+Private hresul As Result
+
+Public Sub _new()
+    hconn = New Connection
+End
+
+Public Function ConectarBase() As Connection
+    
+    If Not Exist("/tmp/simplereservacion.bin") Then
+    Copy "simplereservacion.bin" To "/tmp/simplereservacion.bin"
+    Message.Warning("Base de datos no existe en ruta, usando una vacia, programa no andara bien")
+    Endif
+    If Not IsNull(hconn) Then
+        If Not hconn.Opened Then
+            hconn.Name = "simplereservacion.bin"
+            hconn.Host = "/tmp/"
+            hconn.Type = "sqlite3"
+            hconn.Open
+        Else
+            If Comp(hconn.Name, "simplereservacion.bin", gb.IgnoreCase) == 0 Then
+                hconn.Close
+                Wait 1
+                hconn.Name = "simplereservacion.bin"
+                hconn.Host = "/tmp/"
+                hconn.Type = "sqlite3"
+                hconn.Open
+            Endif
+        Endif
+    Endif
+
+End
+
+
+Public Function VerificarCredenciales(userin As String, clave As String) As Boolean
+
+    Dim operacion As Boolean = False
+    
+    If Comp(userin, clave, gb.IgnoreCase) == 0 Then
+        operacion = True
+    Endif
+
+    Return operacion
+
+End
+
+
+Public Function OtenerOrigenes() As String[]
+    
+    Dim LineasOrigen As New String[]
+    Dim valor As String = ""
+    Dim indix As Integer = 0
+    'consulta sql: obtener los valores del campo "local" de la tabla "Datos", sin duplicarlos, ordenados Ascendentemente
+    hresul = hconn.Exec("select * from algo")
+    'recorro todo el resultado que se han producido en la consulta, y cargo los datos en el comboBox
+    Do While hresul.Available
+        valor = hresul["origen_descripcion"] '"Local" es el nombre del campo, que queremos leer sus datos
+        indix = indix + 1
+        LineasOrigen.Add(valor, indix)
+    hresul.MoveNext()
+    Loop
+    Return LineasOrigen
+    
+End
+
+Public Function OtenerDestinos(Optional objetivo As String = "") As String[]
+    
+    Dim RelenosCombox As New String[]
+    Dim valor As String = ""
+    Dim indix As Integer = 0
+    'consulta sql: obtener los valores del campo "local" de la tabla "Datos", sin duplicarlos, ordenados Ascendentemente
+    hresul = hconn.Exec("SELECT lineanombre from lineas")
+    'recorro todo el resultado que se han producido en la consulta, y cargo los datos en el comboBox
+    Do While hresul.Available
+        valor = hresul["lineanombre"] '"Local" es el nombre del campo, que queremos leer sus datos
+        indix = indix + 1
+        RelenosCombox.Add(valor, indix)
+    hresul.MoveNext()
+    Loop
+    Return RelenosCombox
+    
+End
+
+
+Public Function ObtenerLineasAescoger(destino As String, origen As String) As String[]
+    
+    Dim RelenosCombox As New String[]
+    Dim valor As String = ""
+    Dim indix As Integer = 0
+    'consulta sql: obtener los valores del campo "local" de la tabla "Datos", sin duplicarlos, ordenados Ascendentemente
+    hresul = hconn.Exec("SELECT lineanombre from lineas")
+    'recorro todo el resultado que se han producido en la consulta, y cargo los datos en el comboBox
+    Do While hresul.Available
+        valor = hresul["lineanombre"] '"Local" es el nombre del campo, que queremos leer sus datos
+        indix = indix + 1
+        RelenosCombox.Add(valor, indix)
+    hresul.MoveNext()
+    Loop
+    Return RelenosCombox
+    
+End
+
+Public Function ObtenerHorasLineasAescoger(destino As String, origen As String, linea As String) As String[]
+    
+    Dim RelenosCombox As New String[]
+    Dim valor As String = ""
+    Dim indix As Integer = 0
+    'consulta sql: obtener los valores del campo "local" de la tabla "Datos", sin duplicarlos, ordenados Ascendentemente
+    hresul = hconn.Exec("SELECT lineanombre from lineas")
+    'recorro todo el resultado que se han producido en la consulta, y cargo los datos en el comboBox
+    Do While hresul.Available
+        valor = hresul["lineanombre"] '"Local" es el nombre del campo, que queremos leer sus datos
+        indix = indix + 1
+        RelenosCombox.Add(valor, indix)
+    hresul.MoveNext()
+    Loop
+    Return RelenosCombox
+    
+End
+
+Public Function OptenerPrecio(destino As String, origen As String, linea As String) As Integer
+    
+    Dim valor As Integer = 0
+    'consulta sql: obtener los valores del campo "local" de la tabla "Datos", sin duplicarlos, ordenados Ascendentemente
+    hresul = hconn.Exec("SELECT precio from lineas")
+    'recorro todo el resultado que se han producido en la consulta, y cargo los datos en el comboBox
+    Do While hresul.Available
+        valor = hresul["precio"] '"Local" es el nombre del campo, que queremos leer sus datos
+        Break
+    Loop
+    Return valor
+    
+End
+
+
+Public Function CerrarReservaciones() As Variant
+    
+    Message.Error("No se ha cerrado el dia de reservaciones aun...")
+    Return False
+    
+End
