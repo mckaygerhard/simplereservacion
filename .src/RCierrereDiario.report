@@ -1,0 +1,15 @@
+# Gambas Form File 3.0
+
+{ Report Report
+  #MoveScaled(0,0,68,52)
+  Paper = Printer.Letter
+  Index = 0
+  Text = ("Reporte de cierre diario")
+  { ReportHBox1 ReportHBox
+    #MoveScaled(1,1,66,46)
+    { ReportVBox1 ReportVBox
+      #MoveScaled(1,1,64,44)
+    }
+  }
+  Index = 0
+}

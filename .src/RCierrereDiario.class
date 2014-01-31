@@ -1,0 +1,77 @@
+' Gambas class file
+
+
+Private hconn As New Connection
+Private hresul As Result
+
+
+Public Function ConectarBase() As Connection
+    
+    If Not Exist("/tmp/simplereservacion.bin") Then
+    Copy "simplereservacion.bin" To "/tmp/simplereservacion.bin"
+    Message.Warning("Base de datos no existe en ruta, usando una vacia, programa no andara bien")
+    Endif
+    If Not IsNull(hconn) Then
+        If Not hconn.Opened Then
+            hconn.Name = "simplereservacion.bin"
+            hconn.Host = "/tmp/"
+            hconn.Type = "sqlite3"
+            hconn.Open
+        Else
+            If Comp(hconn.Name, "simplereservacion.bin", gb.IgnoreCase) == 0 Then
+                hconn.Close
+                Wait 1
+                hconn.Name = "simplereservacion.bin"
+                hconn.Host = "/tmp/"
+                hconn.Type = "sqlite3"
+                hconn.Open
+            Endif
+        Endif
+    Endif
+
+End
+
+
+
+Public Sub _new()
+
+  Dim hResult As Result
+  Dim Rlbl As ReportLabel
+  hconn = New Connection
+  
+  If Not Exist("/tmp/simplereservacion.bin") Then
+    Copy "simplereservacion.bin" To "/tmp/simplereservacion.bin"
+    Message.Warning("Base de datos no existe en ruta, usando una vacia, programa no andara bien")
+    Endif
+    If Not IsNull(hconn) Then
+        If Not hconn.Opened Then
+            hconn.Name = "simplereservacion.bin"
+            hconn.Host = "/tmp/"
+            hconn.Type = "sqlite3"
+            hconn.Open
+        Else
+            If Comp(hconn.Name, "simplereservacion.bin", gb.IgnoreCase) == 0 Then
+                hconn.Close
+                Wait 1
+                hconn.Name = "simplereservacion.bin"
+                hconn.Host = "/tmp/"
+                hconn.Type = "sqlite3"
+                hconn.Open
+            Endif
+        Endif
+    Endif
+  
+
+  hResult = hconn.Limit(50).Find("tb_cierreDetalle")
+  If Not hResult.Available Then Return
+
+  For Each hResult
+
+    Rlbl = New ReportLabel(ReportVBox1)
+    Rlbl.Autoresize = True
+    Rlbl.Text = hResult!name & " " & hResult!firstname
+    Rlbl.Border.bottom.Width = "1px"
+
+  Next
+
+End
