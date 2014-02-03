@@ -63,6 +63,7 @@ Public Sub _new()
   
 
   hResult = hconn.Limit(50).Find("tb_cierreDetalle")
+  'hResult = hconn.Limit(50).Exec("SELECT * FROm oaaoao")
   If Not hResult.Available Then Return
 
   For Each hResult
