@@ -38,6 +38,8 @@ Public Sub ButtonLogin_Click()
         habilitarControles
         prepararControles
         rellenarControles
+    Print Val(Format$(Now, "yyyymmdd"))
+    Print Val(Format$(Now, "hh:mm:ss"))
     'Else
     '    desabilitarControles
     'Endif
@@ -88,6 +90,8 @@ Private Sub rellenarControles() ' solo usar p
     ComboBoxLinDest.Clear
     ComboBoxLineaTransporte.Clear
     ComboBoxHoraSalida.Clear
+    ComboBoxLinOrig.Add("Seleccione origen")
+    ComboBoxLinDest.Add("Seleccione destino")
     objetivoorigen = operaciones.OtenerOrigenes()
     For Each cadalineacombo In objetivoorigen
         Me.ComboBoxLinOrig.Add(cadalineacombo)
@@ -157,12 +161,15 @@ Public Sub ComboBoxLinOrig_Click() ' ComboBoxLinOrig_Change ComboBoxLinOrig_Clic
     ComboBoxLinDest.Clear
     ComboBoxLineaTransporte.Clear
     ComboBoxHoraSalida.Clear
+    ComboBoxLinDest.Add("Seleccione destino")
+    ComboBoxLineaTransporte.Add("Seleccione Linea")
+    ComboBoxHoraSalida.Add("Escoja hora salir")
     ' rellenado respecto la seleccion de origen
     objetivodestino = operaciones.OtenerDestinos(seleccionorigen)
     If objetivodestino.Length > 0 Then
         For Each cadalineacombo In objetivodestino
             'Me.ComboBoxLinDest.Add(objetivodestino["destino_descripcion"], objetivodestino["destino_id"])
-            Me.ComboBoxLinDest.Add(cadalineacombo)
+            Me.ComboBoxLinDest.Add(cadalineacombo, CInt(objetivodestino.Key))
         Next
     Endif
     ' limitacion de dias a la fecha actual
@@ -182,12 +189,14 @@ Public Sub ComboBoxLinDest_Click()
     selecciondestin = ComboBoxLinDest.Index
     ComboBoxLineaTransporte.Clear
     ComboBoxHoraSalida.Clear
+    ComboBoxLineaTransporte.Add("Seleccione Linea")
+    ComboBoxHoraSalida.Add("Escoja hora salir")
     ' lineas que van a el destino respecto la seleccion de destino
     objetivolineas = operaciones.ObtenerLineasAescoger(selecciondestin, seleccionorigen)
     If objetivolineas.Length > 0 Then
         For Each cadalineacombo In objetivolineas
             'Me.ComboBoxLineaTransporte.Add(objetivolineas["linea_descripcion"], objetivolineas["linea_id"])
-            Me.ComboBoxLineaTransporte.Add(cadalineacombo)
+            Me.ComboBoxLineaTransporte.Add(cadalineacombo, CInt(objetivolineas.Key))
         Next
     Endif
     ' limitacion de dias a la fecha actual
@@ -206,12 +215,13 @@ Public Sub ComboBoxLineaTransporte_Click()
     selecciondestin = ComboBoxLinDest.Index
     seleccionlinea = ComboBoxLineaTransporte.Index
     ComboBoxHoraSalida.Clear
+    ComboBoxHoraSalida.Add("Escoja hora salir")
     ' lineas que van a el destino respecto la seleccion de destino
     horaobjetivo = operaciones.ObtenerHorasLineasAescoger(selecciondestin, seleccionorigen, seleccionlinea)
     If horaobjetivo.Length > 0 Then
         For Each cadalineacombo In horaobjetivo
             'Me.ComboBoxHoraSalida.Add(horaobjetivo["hora_descripcion"], horaobjetivo["hora_id"])
-            Me.ComboBoxHoraSalida.Add(cadalineacombo)
+            Me.ComboBoxHoraSalida.Add(cadalineacombo, CInteger(horaobjetivo.Key))
         Next
     Endif
     TextLabelPrecio.Text = operaciones.OptenerPrecio(selecciondestin, seleccionorigen, seleccionlinea)
@@ -237,7 +247,7 @@ Public Sub ComboBoxHoraSalida_Click()
     '    Me.ComboBoxHoraSalida.Add(diaobjetivo)
     'Next
     ' por ahora esto se limita a saturar l linea siempre qu sea 3 dias adelant
-    'DateChooserFechaSalida = Val(Format$(Now, "dd")) + 3
+    'DateChooserFechaSalida = Val(Format$(Now, "yyyymmddHHMMss")) + 3
 End
 
 
