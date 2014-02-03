@@ -1,7 +1,8 @@
 ' Gambas class file
 
 Private operaciones As CTransporteBean
-Private $hReport As Report
+Private $hReportCierre As Report
+Private $hReportReserva As Report
 
 Public Sub _new()
     operaciones = New CTransporteBean
@@ -26,9 +27,12 @@ End
 
 
 Public Sub Form_Open()
-    desabilitarControles
+    'desabilitarControles
     operaciones.ConectarBase()
-    prepararControles
+    'prepararControles
+            habilitarControles
+        prepararControles
+        rellenarControles
 End
 
 
@@ -71,7 +75,7 @@ Private Sub prepararControles()
     ComboBoxLinDest.Text = "Seleccione destino"
     ComboBoxLineaTransporte.Text = "Seleccione Linea"
     ComboBoxHoraSalida.Text = "Escoja hora salir"
-    ButtonReservar.Text = "Cierre"
+    ButtonReservar.Text = "Reservar pasaje"
     ComboBoxLinOrig.ReadOnly = True
     ComboBoxLinDest.ReadOnly = True
     ComboBoxLineaTransporte.ReadOnly = True
@@ -110,8 +114,16 @@ Private Sub rellenarControles() ' solo usar p
     Next
 End
 
-Public Sub ButtonClose_Click()
+Private Function ValidarFechaReserva(Optional fecha As Date)
+    Dim valido As Integer = 0
+    valido = DateDiff(Date(Now), fecha, gb.Day)
+    If valido < 3 Then
+        Message.Error("Selecione un dia mayor, debe reservar en el futuro")
+    Endif
+End
 
+
+Public Sub ButtonClose_Click()
     Dim salir As Boolean = False
     salir = operaciones.CerrarReservaciones()
     If salir Then
@@ -119,35 +131,20 @@ Public Sub ButtonClose_Click()
     Else
         Return
     Endif
-
 End
+
+
+
+Public Sub ButtonReport_Click()
+    $hReportCierre = New RCierrereDiario
+    $hReportCierre.Preview()
+End
+
 
 Public Sub ButtonReservar_Click()
-
-    Dim salir As Boolean = False
-    salir = operaciones.CerrarReservaciones()
-    If salir Then
-        Me.Form_Open
-    Else
-        Return
-    Endif
-
+    $hReportReserva = New RReserva("11") ' pasar id de l reserva, del label text reservaid TODO
+    $hReportReserva.Preview()
 End
-
-Private Sub LimitarFechas()
-    
-    
-    
-End
-
-Public Sub ComboBoxLinOrig_Change()
-    ComboBoxLinOrig_Click()
-End
-
-Public Sub ComboBoxLinOrig_KeyRelease()
-    ComboBoxLinOrig_Click()
-End
-
 
 Public Sub ComboBoxLinOrig_Click() ' ComboBoxLinOrig_Change ComboBoxLinOrig_Click
     ' cambiar este por ComboBoxLinOrig_Click si no te gustase
@@ -172,8 +169,6 @@ Public Sub ComboBoxLinOrig_Click() ' ComboBoxLinOrig_Change ComboBoxLinOrig_Clic
             Me.ComboBoxLinDest.Add(cadalineacombo, CInt(objetivodestino.Key))
         Next
     Endif
-    ' limitacion de dias a la fecha actual
-    LimitarFechas
 End
 
 
@@ -199,8 +194,6 @@ Public Sub ComboBoxLinDest_Click()
             Me.ComboBoxLineaTransporte.Add(cadalineacombo, CInt(objetivolineas.Key))
         Next
     Endif
-    ' limitacion de dias a la fecha actual
-    LimitarFechas
 End
 
 Public Sub ComboBoxLineaTransporte_Click()
@@ -225,8 +218,6 @@ Public Sub ComboBoxLineaTransporte_Click()
         Next
     Endif
     TextLabelPrecio.Text = operaciones.OptenerPrecio(selecciondestin, seleccionorigen, seleccionlinea)
-    ' limitacion de dias a la fecha actual
-    LimitarFechas
 End
 
 Public Sub ComboBoxHoraSalida_Click()
@@ -251,17 +242,8 @@ Public Sub ComboBoxHoraSalida_Click()
 End
 
 
-
 Public Sub DateChooserFechaSalida_Change()
-    Dim valido As Integer = 0
-    valido = DateDiff(Date(Now), DateChooserFechaSalida.Value, gb.Day)
-    If valido < 3 Then
-        Message.Error("Selecione un dia mayor, debe reservar en el futuro")
-    Endif
+    ValidarFechaReserva(DateChooserFechaSalida.Value)
 End
 
 
-Public Sub ButtonReport_Click()
-    $hReport = New RCierrereDiario
-    $hReport.Preview()
-End

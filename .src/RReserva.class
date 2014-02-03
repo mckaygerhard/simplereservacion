@@ -1,0 +1,111 @@
+' Gambas class file
+
+Private operaciones As CTransporteBean
+Private $hReportReserva As Report   ' nombre debe ser igual al referenciado en main formulario
+
+Public Sub _new(idreserva As String)
+    Dim hResult As Result
+    Dim Rlbl As ReportLabel
+    Dim RHBox1, RHBox2 As ReportVBox
+    Dim lblID, lblApell, lblName, lblCedula As ReportLabel
+    Dim lblori, lbldest, lbllinea, lblreserFec As ReportLabel
+    Dim lblfechasal, lblhorasal, lblmonto, lblfechaImpr, lbldondereser As ReportLabel
+    
+    
+    'Printer.PaperWidth = 
+    operaciones = New CTransporteBean
+    operaciones.ConectarBase()
+    operaciones.RealizarReservacion(idreserva) ' se realiza la insercion entonces reservada
+    hResult = operaciones.DetalleReservacion(idreserva) ' se obtine de la db, si se realizo exitoso
+
+    ReportHBoxHeader.Border.Width = "1px"
+    ReportHBoxAncho.Border.Width = "1px"
+    ReportVBoxData.Expand = True
+    For Each hResult
+        
+        ReportLabelTitle.Expand = True
+        ReportLabelTitle.Text = "Reservacion " & hResult["reservacion_id"] & " de " & hResult["reservacion_apellido"] & ", " & hResult["reservacion_nombre"]
+        
+        RHBox1 = New ReportVBox(ReportVBoxData)
+        RHBox1.Padding.Bottom = "5px"
+        RHBox1.Padding.Top = "1px"
+        RHBox1.Height = "10mm"
+        RHBox1.Border.Width = "1px"
+        RHBox1.Expand = True
+        lblID = New ReportLabel(RHBox1)
+        lblID.Width = "20mm"
+        lblID.Alignment = Align.Left
+        lblID.Padding.Left = "25px"
+        lblID.Text = "Numero reservacion : " & hResult["reservacion_id"]
+        lblApell = New ReportLabel(RHBox1)
+        lblApell.Expand = True
+        lblApell.Alignment = Align.Left
+        lblApell.Padding.Left = "25px"
+        lblApell.Text = "Nombre(s) : " & hResult["reservacion_nombre"]
+        lblName = New ReportLabel(RHBox1)
+        lblName.Expand = True
+        lblName.Alignment = Align.Left
+        lblName.Padding.Left = "25px"
+        lblName.Text = "Apellido(s) : " & hResult["reservacion_apellido"]
+        lblCedula = New ReportLabel(RHBox1)
+        lblCedula.Expand = True
+        lblCedula.Alignment = Align.Left
+        lblCedula.Padding.Left = "25px"
+        lblCedula.Text = "Cedula : " & hResult["reservacion_cedula"]
+        lblreserFec = New ReportLabel(RHBox1)
+        lblreserFec.Expand = True
+        lblreserFec.Alignment = Align.Left
+        lblreserFec.Padding.Left = "25px"
+        lblreserFec.Text = "Fecha Reserva : " & hResult["reservacion_fecha_reserva"]
+        lblfechaImpr = New ReportLabel(RHBox1)
+        lblfechaImpr.Expand = True
+        lblfechaImpr.Alignment = Align.Left
+        lblfechaImpr.Padding.Left = "25px"
+        lblfechaImpr.Text = "Fecha Impresion : " & hResult["reservacion_fecha_impresion"]
+        lbldondereser = New ReportLabel(RHBox2)
+        lbldondereser.Expand = True
+        lbldondereser.Alignment = Align.Left
+        lbldondereser.Padding.Left = "25px"
+        lbldondereser.Text = "Lugar Reservacon : " & hResult["reservacion_donde_reservo"]
+        
+        RHBox2 = New ReportVBox(ReportVBoxDeta)
+        RHBox2.Padding.Bottom = "5px"
+        RHBox2.Padding.Top = "1px"
+        RHBox2.Height = "10mm"
+        RHBox2.Border.Width = "1px"
+        RHBox2.Expand = True
+        lblori = New ReportLabel(RHBox2)
+        lblori.Width = "20mm"
+        lblori.Alignment = Align.Left
+        lblori.Padding.Left = "25px"
+        lblori.Text = "Origen : " & hResult["reservacion_origen"]
+        lbldest = New ReportLabel(RHBox2)
+        lbldest.Expand = True
+        lbldest.Alignment = Align.Left
+        lbldest.Padding.Left = "25px"
+        lbldest.Text = "Destino : " & hResult["reservacion_destino"]
+        lbllinea = New ReportLabel(RHBox2)
+        lbllinea.Expand = True
+        lbllinea.Alignment = Align.Left
+        lbllinea.Padding.Left = "25px"
+        lbllinea.Text = "Linea : " & hResult["reservacion_linea"]
+        lblfechasal = New ReportLabel(RHBox2)
+        lblfechasal.Expand = True
+        lblfechasal.Alignment = Align.Left
+        lblfechasal.Padding.Left = "25px"
+        lblfechasal.Text = "Fecha : " & hResult["reservacion_fecha_salida"]
+        lblhorasal = New ReportLabel(RHBox2)
+        lblhorasal.Expand = True
+        lblhorasal.Alignment = Align.Left
+        lblhorasal.Padding.Left = "25px"
+        lblhorasal.Text = "Hora : " & hResult["reservacion_hora_salida"]
+        lblmonto = New ReportLabel(RHBox2)
+        lblmonto.Expand = True
+        lblmonto.Alignment = Align.Left
+        lblmonto.Padding.Left = "25px"
+        lblmonto.Text = "Monto : " & hResult["reservacion_monto"]
+        
+    Next
+End
+
+

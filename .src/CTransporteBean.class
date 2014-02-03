@@ -94,7 +94,6 @@ Public Function ObtenerLineasAescoger(destino As String, origen As String) As Co
     Dim indix As Integer = 0
     'consulta sql: SELECT linea_id,linea_descripcion FROM tb_linea WHERE linea_id in (SELECT destinoLinea_idLinea FROM tbr_destinoLinea WHERE destinoLinea_idCiudad = 'parametro'
     'hresul = hconn.Find("tb_line", "linea_id IN (select destinoLinea_idLinea from tbr_destinoLinea where destinoLinea_idCiudad = &1)", destino)
-    Print "SELECT linea_id,linea_descripcion FROM tb_line WHERE linea_id in (SELECT destinoLinea_idLinea FROM tbr_destinoLinea WHERE destinoLinea_idCiudad = '" & destino & "')"
     hresul = hconn.Exec("SELECT linea_id,linea_descripcion FROM tb_line WHERE linea_id in (SELECT destinoLinea_idLinea FROM tbr_destinoLinea WHERE destinoLinea_idCiudad = '" & destino & "')")
     Do While hresul.Available
         valor = hresul["linea_descripcion"]
@@ -112,7 +111,6 @@ Public Function ObtenerHorasLineasAescoger(destino As String, origen As String, 
     Dim valor As String = ""
     Dim indix As String = "0"
     'consulta sql: select hora_id,hora_descripcion from tb_hora_salida where hora_id in (select lineaHoraCiudad_idHora from tbr_lineaHoraCiudad where lineaHoraCiudad_idLinea = '" & linea & "' and lineaHoraCiudad_idCiudad='" & destino & "')
-    Print "select hora_id,hora_descripcion from tb_hora_salida where hora_id in (select lineaHoraCiudad_idHora from tbr_lineaHoraCiudad where lineaHoraCiudad_idLinea = '" & linea & "' and lineaHoraCiudad_idCiudad='" & destino & "')"
     hresul = hconn.Exec("select hora_id,hora_descripcion from tb_hora_salida where hora_id in (select lineaHoraCiudad_idHora from tbr_lineaHoraCiudad where lineaHoraCiudad_idLinea = '" & linea & "' and lineaHoraCiudad_idCiudad='" & destino & "')")
     Do While hresul.Available
         valor = hresul["hora_descripcion"] '"Local" es el nombre del campo, que queremos leer sus datos
@@ -157,6 +155,42 @@ Public Function OptenerPrecio(destino As String, origen As String, linea As Stri
     Return valor
     
 End
+
+Public Function RealizarReservacion(idreserva As String)
+    
+    Dim hCollection As New Collection(gb.Binary)
+    Dim valor As String = ""
+    Dim indix As String = "0"
+    'consulta sql: select hora_id,hora_descripcion from tb_hora_salida where hora_id in (select lineaHoraCiudad_idHora from tbr_lineaHoraCiudad where lineaHoraCiudad_idLinea = '" & linea & "' and lineaHoraCiudad_idCiudad='" & destino & "')
+    ' hresul = hconn.Exec("select hora_id,hora_descripcion from tb_hora_salida where hora_id in (select lineaHoraCiudad_idHora from tbr_lineaHoraCiudad where lineaHoraCiudad_idLinea = '" & linea & "' and lineaHoraCiudad_idCiudad='" & destino & "')")
+    ' Do While hresul.Available
+    '     valor = hresul["hora_descripcion"] '"Local" es el nombre del campo, que queremos leer sus datos
+    '     indix = hresul["hora_id"]
+    '      hCollection[indix] = valor
+    ' hresul.MoveNext()
+    ' Loop
+    ' Return hCollection
+    
+End
+
+Public Function DetalleReservacion(idreserva As String) As Result
+    
+    Dim hCollection As New Collection(gb.Binary)
+    Dim valor As String = ""
+    Dim indix As String = "0"
+    'consulta sql: SELECT reservacion_id, reservacion_cedula, reservacion_apellido, reservacion_nombre, reservacion_origen, reservacion_destino, reservacion_linea, reservacion_fecha_reserva, reservacion_fecha_salida, reservacion_fecha_impresion, reservacion_hora_salida, reservacion_monto, reservacion_donde_reservo FROM tb_reservacion")
+    hresul = hconn.Find("tb_reservacion", "WHERE reservacion_id = &1", idreserva)
+    ' Do While hresul.Available
+    '     ' reservacion_id, reservacion_cedula, reservacion_apellido, reservacion_nombre, reservacion_origen, reservacion_destino, reservacion_linea, reservacion_fecha_reserva, reservacion_fecha_salida, reservacion_fecha_impresion, reservacion_hora_salida, reservacion_monto, reservacion_donde_reservo FROM 
+    '      valor = hresul["reservacion_id"] '"Local" es el nombre del campo, que queremos leer sus datos
+    '      indix = hresul["reservacion_cedula"]
+    '       hCollection[indix] = valor
+    ' hresul.MoveNext()
+    ' Loop
+    Return hresul
+    
+End
+
 
 
 Public Function CerrarReservaciones() As Variant
