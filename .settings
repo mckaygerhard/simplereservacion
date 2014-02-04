@@ -1,6 +1,3 @@
-[Bookmarks]
-FMainReservar=[]
-
 [Breakpoints]
 Count=0
 
@@ -35,6 +32,9 @@ Geometry=[0,52,270,270]
 [DebugWindow/hCollection]
 Geometry=[498,160,270,270]
 
+[DebugWindow/hResult]
+Geometry=[0,52,270,270]
+
 [DebugWindow/hconn]
 Geometry=[0,52,1099,581]
 
@@ -62,12 +62,9 @@ Geometry=[439,70,560,358]
 Geometry=[0,52,270,270]
 
 [OpenFile]
-File[1]=".src/FMainReservar.form"
-File[2]=".src/FMainReservar.class:163.49"
-File[3]=".src/CTransporteBean.class:41.4"
-Active=4
-File[4]=".connection/simplereservacion.connection"
-Count=4
+Active=1
+File[1]="README.md:23.0"
+Count=1
 
 [Watches]
 Count=0
