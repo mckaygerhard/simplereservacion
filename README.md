@@ -22,3 +22,7 @@ Authors
 PICCORO Lenz McKAY
 Leonardo Salazar
 
+Screenshot
+----------
+
+![simplereservacion.png](simplereservacion.png)
