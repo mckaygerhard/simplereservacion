@@ -136,13 +136,47 @@ End
 
 
 Public Sub ButtonReport_Click()
-    $hReportCierre = New RCierrereDiario
+    $hReportCierre = New RCierrereDiario(DateChooserReport.Value)
     $hReportCierre.Preview()
 End
 
 
 Public Sub ButtonReservar_Click()
-    $hReportReserva = New RReserva("11") ' pasar id de l reserva, del label text reservaid TODO
+    Dim cedula As String
+    Dim nombre As String
+    Dim apellido As String
+    Dim origen As String
+    Dim destino As String
+    Dim linea As String
+    Dim fechaSalida As String
+    Dim horaSalida As String
+    Dim fechaEfectuadaReservacion As String
+    Dim fechaImpresion As String
+    Dim precio As String
+    Dim id_reserva As Integer
+    Dim fecha_actual As String 
+    fecha_actual = Val(Format$(Now, "yyyymmdd"))
+    
+    Randomize
+    id_reserva = Rnd * 1000000000
+    ' por ahora se usa los textos de ls combo, pero en el futuro deberan ser los id
+    cedula = Me.TextBoxCedula.Text
+    nombre = Me.TextBoxNombre.Text 
+    apellido = Me.TextBoxApellido.Text 
+    origen = Me.ComboBoxLinOrig.Text
+    destino = Me.ComboBoxLinDest.Text 
+    linea = Me.ComboBoxLineaTransporte.Text
+    fechaSalida = Val(Format$(Me.DateChooserFechaSalida.Value, "dd/mm/yyyy"))
+    horaSalida = Me.ComboBoxHoraSalida.Text 
+    fechaEfectuadaReservacion = Val(Format$(Now, "yyyymmdd"))
+    fechaImpresion = ""
+    precio = Me.TextLabelPrecio.Text
+    operaciones.RealizarReservacion(CStr(id_reserva), cedula, nombre, apellido, origen, destino, linea, horaSalida, fechaSalida, fecha_actual, precio, "vargas")
+    TextBoxCedula.Text = ""
+    TextBoxApellido.Text = ""
+    TextBoxNombre.Text = ""
+    ' en el codigo de reporte se llama al bean con el detalle del id de reservacion (circulo cerrado)
+    $hReportReserva = New RReserva(id_reserva) ' pasar id de l reserva, del label text reservaid TODO
     $hReportReserva.Preview()
 End
 

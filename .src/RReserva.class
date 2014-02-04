@@ -15,7 +15,7 @@ Public Sub _new(idreserva As String)
     'Printer.PaperWidth = 
     operaciones = New CTransporteBean
     operaciones.ConectarBase()
-    operaciones.RealizarReservacion(idreserva) ' se realiza la insercion entonces reservada
+    operaciones.DetalleReservacion(idreserva) ' se realiza la insercion entonces reservada
     hResult = operaciones.DetalleReservacion(idreserva) ' se obtine de la db, si se realizo exitoso
 
     ReportHBoxHeader.Border.Width = "1px"
@@ -103,7 +103,7 @@ Public Sub _new(idreserva As String)
         lblmonto.Expand = True
         lblmonto.Alignment = Align.Left
         lblmonto.Padding.Left = "25px"
-        lblmonto.Text = "Monto : " & hResult["reservacion_monto"]
+        lblmonto.Text = "Monto : " & hResult["reservacion_monto"] & " BsF"
         
     Next
 End

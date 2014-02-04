@@ -1,78 +1,62 @@
 ' Gambas class file
 
 
-Private hconn As New Connection
-Private hresul As Result
+Private operaciones As CTransporteBean
+Private $hReportCierre As Report   ' nombre debe ser igual al referenciado en main formulario
 
-
-Public Function ConectarBase() As Connection
+Public Sub _new(fecha As Date)
+    Dim hResult As Result
+    Dim RHBox As ReportHBox
+    Dim lblID, lblorigen, lbldestino, lbllinea, lblfechasal, lblhorasal, lblmon, lblName, lblCedula, labeltotal As ReportLabel
+    Dim montototal As Integer = 0
     
-    If Not Exist("/tmp/simplereservacion.bin") Then
-    Copy "simplereservacion.bin" To "/tmp/simplereservacion.bin"
-    Message.Warning("Base de datos no existe en ruta, usando una vacia, programa no andara bien")
-    Endif
-    If Not IsNull(hconn) Then
-        If Not hconn.Opened Then
-            hconn.Name = "simplereservacion.bin"
-            hconn.Host = "/tmp/"
-            hconn.Type = "sqlite3"
-            hconn.Open
-        Else
-            If Comp(hconn.Name, "simplereservacion.bin", gb.IgnoreCase) == 0 Then
-                hconn.Close
-                Wait 1
-                hconn.Name = "simplereservacion.bin"
-                hconn.Host = "/tmp/"
-                hconn.Type = "sqlite3"
-                hconn.Open
-            Endif
-        Endif
-    Endif
+    ReportLabel1.Text = "Reporte " & Day(fecha) & "/" & Month(fecha) & "/" & Year(fecha)
 
-End
+    'Printer.PaperWidth = 
+    operaciones = New CTransporteBean
+    operaciones.ConectarBase()
+    hResult = operaciones.ResultadoReporte(fecha) ' se obtine de la db, si se realizo exitoso
+    If Not hResult.Available Then Return
 
-
-
-Public Sub _new()
-
-  Dim hResult As Result
-  Dim Rlbl As ReportLabel
-  hconn = New Connection
-  
-  If Not Exist("/tmp/simplereservacion.bin") Then
-    Copy "simplereservacion.bin" To "/tmp/simplereservacion.bin"
-    Message.Warning("Base de datos no existe en ruta, usando una vacia, programa no andara bien")
-    Endif
-    If Not IsNull(hconn) Then
-        If Not hconn.Opened Then
-            hconn.Name = "simplereservacion.bin"
-            hconn.Host = "/tmp/"
-            hconn.Type = "sqlite3"
-            hconn.Open
-        Else
-            If Comp(hconn.Name, "simplereservacion.bin", gb.IgnoreCase) == 0 Then
-                hconn.Close
-                Wait 1
-                hconn.Name = "simplereservacion.bin"
-                hconn.Host = "/tmp/"
-                hconn.Type = "sqlite3"
-                hconn.Open
-            Endif
-        Endif
-    Endif
-  
-
-  hResult = hconn.Limit(50).Find("tb_cierreDetalle")
-  'hResult = hconn.Limit(50).Exec("SELECT * FROm oaaoao")
-  If Not hResult.Available Then Return
-
-  For Each hResult
-
-    Rlbl = New ReportLabel(ReportVBox1)
-    Rlbl.Autoresize = True
-    Rlbl.Text = hResult!name & " " & hResult!firstname
-    Rlbl.Border.bottom.Width = "1px"
-
-  Next
-
+    For Each hResult
+        RHBox = New ReportHBox(ReportVBox2)
+        RHBox.Height = "10mm"
+    
+        lblID = New ReportLabel(RHBox)
+        lblID.Expand = True
+        lblID.Alignment = Align.Center
+        lblID.Text = hResult!reservacion_linea
+        lblName = New ReportLabel(RHBox)
+        lblName.Expand = True
+        lblName.Alignment = Align.Center
+        lblName.Text = hResult!reservacion_apellido & " " & hResult!reservacion_nombre
+        lblCedula = New ReportLabel(RHBox)
+        lblCedula.Expand = True
+        lblCedula.Alignment = Align.Center
+        lblCedula.Text = hResult!reservacion_cedula
+        lbldestino = New ReportLabel(RHBox)
+        lbldestino.Expand = True
+        lbldestino.Alignment = Align.Center
+        lbldestino.Text = hResult!reservacion_destino
+        lblorigen = New ReportLabel(RHBox)
+        lblorigen.Expand = True
+        lblorigen.Alignment = Align.Center
+        lblorigen.Text = hResult!reservacion_origen
+        lblfechasal = New ReportLabel(RHBox)
+        lblfechasal.Expand = True
+        lblfechasal.Alignment = Align.Center
+        lblfechasal.Text = hResult!reservacion_fecha_salida
+        lblhorasal = New ReportLabel(RHBox)
+        lblhorasal.Width = "20mm"
+        lblhorasal.Alignment = Align.Center
+        lblhorasal.Text = hResult!reservacion_hora_salida
+        lblmon = New ReportLabel(RHBox)
+        lblmon.Width = "20mm"
+        lblmon.Alignment = Align.Center
+        lblmon.Text = hResult!reservacion_monto & " BsF"
+        montototal = montototal + hResult!reservacion_monto
+    Next
+    
+    ReportLabel3.Text = "Monto total del " & ReportLabel1.Text & " : " & montototal & " BsF"
+    
 End

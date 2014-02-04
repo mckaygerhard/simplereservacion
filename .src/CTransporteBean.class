@@ -156,45 +156,25 @@ Public Function OptenerPrecio(destino As String, origen As String, linea As Stri
     
 End
 
-Public Function RealizarReservacion(idreserva As String)
-    
-    Dim hCollection As New Collection(gb.Binary)
-    Dim valor As String = ""
-    Dim indix As String = "0"
-    'consulta sql: select hora_id,hora_descripcion from tb_hora_salida where hora_id in (select lineaHoraCiudad_idHora from tbr_lineaHoraCiudad where lineaHoraCiudad_idLinea = '" & linea & "' and lineaHoraCiudad_idCiudad='" & destino & "')
-    ' hresul = hconn.Exec("select hora_id,hora_descripcion from tb_hora_salida where hora_id in (select lineaHoraCiudad_idHora from tbr_lineaHoraCiudad where lineaHoraCiudad_idLinea = '" & linea & "' and lineaHoraCiudad_idCiudad='" & destino & "')")
-    ' Do While hresul.Available
-    '     valor = hresul["hora_descripcion"] '"Local" es el nombre del campo, que queremos leer sus datos
-    '     indix = hresul["hora_id"]
-    '      hCollection[indix] = valor
-    ' hresul.MoveNext()
-    ' Loop
-    ' Return hCollection
-    
+Public Function RealizarReservacion(id_reserva As String, cedula As String, nombre As String, apellido As String, origen As String, destino As String, linea As String, horaSalida As String, fechaSalida As String, fechaSistema As String, monto As Float, ubicacion As String) As Result
+    hresul = hconn.Exec("insert into tb_reservacion values ('" & id_reserva & "','" & cedula & "','" & apellido & "','" & nombre & "','" & origen & "','" & destino & "','" & linea & "','" & fechaSistema & "','" & fechaSalida & "','" & fechaSistema & "','" & horaSalida & "'," & monto & ",'" & ubicacion & "') ")
 End
 
 Public Function DetalleReservacion(idreserva As String) As Result
-    
-    Dim hCollection As New Collection(gb.Binary)
-    Dim valor As String = ""
-    Dim indix As String = "0"
-    'consulta sql: SELECT reservacion_id, reservacion_cedula, reservacion_apellido, reservacion_nombre, reservacion_origen, reservacion_destino, reservacion_linea, reservacion_fecha_reserva, reservacion_fecha_salida, reservacion_fecha_impresion, reservacion_hora_salida, reservacion_monto, reservacion_donde_reservo FROM tb_reservacion")
-    hresul = hconn.Find("tb_reservacion", "WHERE reservacion_id = &1", idreserva)
-    ' Do While hresul.Available
-    '     ' reservacion_id, reservacion_cedula, reservacion_apellido, reservacion_nombre, reservacion_origen, reservacion_destino, reservacion_linea, reservacion_fecha_reserva, reservacion_fecha_salida, reservacion_fecha_impresion, reservacion_hora_salida, reservacion_monto, reservacion_donde_reservo FROM 
-    '      valor = hresul["reservacion_id"] '"Local" es el nombre del campo, que queremos leer sus datos
-    '      indix = hresul["reservacion_cedula"]
-    '       hCollection[indix] = valor
-    ' hresul.MoveNext()
-    ' Loop
+    hresul = hconn.exec("select *  from tb_reservacion where reservacion_id='" & idreserva & "'")
     Return hresul
-    
+End
+
+
+Public Function ResultadoReporte(fecha As Date) As Result
+    hresul = hconn.Find("tb_reservacion", "reservacion_fecha_reserva =&1", Format(fecha, "yyyymmdd"))
+    Return hresul
 End
 
 
 
 Public Function CerrarReservaciones() As Variant
-    
+    ' TODO
     Message.Error("No se ha cerrado el dia de reservaciones aun...")
     Return False
     

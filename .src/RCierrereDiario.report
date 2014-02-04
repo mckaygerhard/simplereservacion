@@ -1,15 +1,49 @@
 # Gambas Form File 3.0
 
 { Report Report
-  #MoveScaled(0,0,68,52)
+  #MoveScaled(0,0,87,67)
   Paper = Printer.Letter
+  Orientation = Printer.Landscape
   Index = 0
   Text = ("Reporte de cierre diario")
   { ReportHBox1 ReportHBox
-    #MoveScaled(1,1,66,46)
-    { ReportVBox1 ReportVBox
-      #MoveScaled(1,1,64,44)
+    #MoveScaled(1,1,85,6)
+    Height = "15mm"
+    Fixed = True
+    Font = Font["Bold,+1"]
+    { ReportLabel1 ReportLabel
+      #MoveScaled(2,1,82,4)
+      Expand = True
+      Text = ("ReportLabel1")
+      Alignment = Align.Center
     }
+  }
+  { ReportVBox1 ReportVBox
+    #MoveScaled(6,8,77,44)
+    Expand = True
+    { ReportHBox2 ReportHBox
+      #MoveScaled(2,2,73,7)
+      Height = "8mm"
+      Fixed = True
+    }
+    { ReportVBox2 ReportVBox
+      #MoveScaled(2,10,73,33)
+      Expand = True
+    }
+  }
+  { ReportLabel3 ReportLabel
+    #MoveScaled(51,54,25,3)
+    Height = "8mm"
+    Expand = True
+    Text = ("ReportLabel3")
+    Alignment = Align.Center
+  }
+  { ReportLabel2 ReportLabel
+    #MoveScaled(2,54,38,4)
+    Height = "10mm"
+    Font = Font["Bold"]
+    Expand = True
+    Text = ("Página $PAGE de $NPAGE")
   }
   Index = 0
 }

@@ -89,19 +89,26 @@
       Text = ("TextLabelPrecio")
     }
     { DateChooserFechaSalida DateChooser
-      MoveScaled(27,31,37,20)
+      MoveScaled(24,31,32,20)
     }
     { ButtonReservar Button
       MoveScaled(3,50,17,3)
       Text = ("ButtonReservar")
     }
+    { DateChooserReport DateChooser
+      MoveScaled(62,35,21,14)
+      Font = Font["-2"]
+    }
+    { Separator1 Separator
+      MoveScaled(60,11,2,41)
+    }
+    { ButtonReport Button
+      MoveScaled(64,27,16,3)
+      Text = ("ButtonReport")
+    }
   }
   { ButtonClose Button
     MoveScaled(69,2,13,3)
     Text = ("ButtonClose")
-  }
-  { ButtonReport Button
-    MoveScaled(69,6,13,3)
-    Text = ("ButtonReport")
   }
 }
